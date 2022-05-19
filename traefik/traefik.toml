@@ -1,0 +1,35 @@
+[log]
+  level = "INFO"
+
+# API and dashboard configuration
+[api]
+  insecure = true
+
+[providers]
+  [providers.docker]
+    exposedByDefault = false
+  [providers.file]
+    directory = "/etc/traefik/conf.d"
+    watch = true
+
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+  [entryPoints.websecure]
+    address = ":443"
+  [entryPoints.metrics]
+    address = ":8081"
+
+[certificatesResolvers.default.acme]
+  dnschallenge = true
+  email = "daniel@majoinen.com"
+  storage = "/letsencrypt/acme.json"
+  [certificatesResolvers.default.acme.dnsChallenge]
+    provider = "cloudflare"
+    delayBeforeCheck = 0
+    resolvers = ["1.1.1.1:53", "8.8.8.8:53"]
+
+# Metrics definition
+[metrics]
+  [metrics.prometheus]
+    entryPoint = "metrics"
